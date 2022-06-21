@@ -4,9 +4,10 @@ import (
 	"context"
 	"flag"
 	"fmt"
-	pb "hellomod/helloworld/helloworld"
 	"log"
 	"net"
+
+	pb "github.com/tlgevers/grpc-vs-rest/helloworld/helloworld"
 
 	"google.golang.org/grpc"
 )
