@@ -1,0 +1,15 @@
+# steps:
+# - name: "gcr.io/tgevers-apps/grpc-greeter-server"
+#   args:
+#   - build
+#   - "--tag=gcr.io/tgevers-apps/grpc-greeter-server"
+#   - "--file=./DockerfileTest"
+#   - .
+# images:
+# - "gcr.io/tgevers-apps/grpc-greeter-server"
+
+steps:
+- name: 'gcr.io/cloud-builders/docker'
+  args: [ 'build', '-t', 'gcr.io/tgevers-apps/grpc-server-greeter:latest', './DockerfileTest' ]
+images:
+- 'gcr.io/tgevers-apps/grpc-greeter-server'

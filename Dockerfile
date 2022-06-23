@@ -1,0 +1,34 @@
+# Use the offical Golang image to create a build artifact.
+# This is based on Debian and sets the GOPATH to /go.
+# https://hub.docker.com/_/golang
+FROM golang as builder
+
+# Copy local code to the container image.
+WORKDIR /app
+RUN pwd
+COPY ./go.mod .
+COPY ./go.sum .
+COPY ./greeter_server ./greeter_server
+RUN ls
+RUN go mod download
+
+# Build the outyet command inside the container.
+# (You may fetch or manage dependencies here,
+# either manually or with a tool like "godep".)
+WORKDIR /app/greeter_server
+RUN CGO_ENABLED=0 GOOS=linux go build -v -o hello
+RUN ls
+
+# Use a Docker multi-stage build to create a lean production image.
+# https://docs.docker.com/develop/develop-images/multistage-build/#use-multi-stage-builds
+FROM alpine
+
+# Copy the binary to the production image from the builder stage.
+COPY --from=builder /app/greeter_server/hello /hello
+
+# Service must listen to $PORT environment variable.
+# This default value facilitates local development.
+# ENV PORT 443
+
+# Run the web service on container startup.
+CMD ["/hello"]
