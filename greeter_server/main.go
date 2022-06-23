@@ -7,13 +7,14 @@ import (
 	"log"
 	"net"
 
-	pb "github.com/tlgevers/grpc-vs-rest/helloworld/helloworld"
+	pb "github.com/tlgevers/grpc-vs-rest/greeter_server/pkg/greeter"
 
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/reflection"
 )
 
 var (
-	port = flag.Int("port", 50051, "server port")
+	port = flag.Int("port", 8080, "server port")
 )
 
 type server struct {
@@ -32,6 +33,7 @@ func main() {
 		log.Fatalf("failed to listen: %v", err)
 	}
 	s := grpc.NewServer()
+	reflection.Register(s)
 	pb.RegisterGreeterServer(s, &server{})
 	log.Printf("server listening at %v", lis.Addr())
 	if err := s.Serve(lis); err != nil {
